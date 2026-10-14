@@ -1,0 +1,21 @@
+# Guardrail policy. Change behavior here, not in code (policy-as-code).
+
+input:
+  redact_pii: true            # strip PII from the question before the LLM sees it
+  block_injection: true
+  injection_threshold: 0.7    # 0..1, sum of rule weights; lower = stricter
+
+retrieval:
+  scan_chunks: true           # catch instructions hidden inside documents
+  drop_injected_chunks: true  # drop the bad chunk instead of failing the request
+  redact_pii: true
+
+output:
+  redact_pii: true
+  block_system_prompt_leak: true
+
+pii_types: [CREDIT_CARD, SSN, EMAIL, PHONE, IP_ADDRESS]
+
+audit:
+  enabled: true
+  path: audit_log.jsonl
